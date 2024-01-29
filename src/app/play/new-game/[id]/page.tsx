@@ -93,16 +93,16 @@ export default function NewGame() {
           >
             <div className="flip-card-inner">
               <div className="flip-card-front">
+                <h1 className="text-xl font-semibold">Kitchen Item</h1>
+                <p>Details about the item</p>
+              </div>
+              <div className="flip-card-back bg-custom-secondary-color text-white">
                 <img
                   src={card.image}
                   alt="Card Front"
                   className="w-full h-full object-cover"
                 />
                 {card.id}
-              </div>
-              <div className="flip-card-back bg-custom-secondary-color text-white">
-                <h1 className="text-xl font-semibold">Kitchen Item</h1>
-                <p>Details about the item</p>
               </div>
             </div>
           </div>
