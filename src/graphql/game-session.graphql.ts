@@ -14,6 +14,7 @@ export const PAGINATED_GAME_SESSIONS = gql`
       data {
         id
         points
+        updated_at
         game {
           id
           name

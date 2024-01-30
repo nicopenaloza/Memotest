@@ -2,8 +2,20 @@ export interface Game {
   id: string;
   name: string;
   image: string;
-  gameCards?: any[];
-  gameSessions?: any[];
+  gameCards?: GameCard[];
+  gameSessions?: GameSession[];
+}
+
+export interface GameSession {
+    id: string;
+    game: Game;
+    game_id: number;
+    points: number;
+    username: string;
+    state: any;
+    deleted: boolean;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface GameCard {

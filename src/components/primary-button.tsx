@@ -13,7 +13,7 @@ export default function PrimaryButton({
     <button
       disabled={disabled}
       onClick={onClick}
-      className={`w-full text-white font-bold py-2 mt-2 rounded-xl hover:scale-105 active:scale-95 ${bgColor}`}
+      className={`w-full max-w-96 text-white font-bold py-2 mt-2 rounded-xl hover:scale-105 active:scale-95 ${bgColor}`}
     >
       {label}
     </button>

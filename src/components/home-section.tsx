@@ -16,13 +16,18 @@ export default function HomeSection({
       {loading ? (
         <Spinner />
       ) : (
-        <div className="grid 2xl:grid-cols-6 xl:grid-cols-4 sm:grid-cols-2 gap-6 w-full px-10 py-5">
+        <div className="w-full px-10 py-5 flex flex-col items-center">
           {children ? (
             children
           ) : (
             <p className="text-gray-500">No content available</p>
           )}
         </div>
+      )}
+      {!children && !loading && (
+        <p className="text-center font-semibold text-xl text-gray-600">
+          No content available
+        </p>
       )}
     </div>
   );
