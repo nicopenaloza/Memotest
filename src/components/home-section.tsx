@@ -11,12 +11,12 @@ export default function HomeSection({
   children?: ReactNode;
 }>) {
   return (
-    <div className="w-full flex flex-col items-center bg-white">
+    <div className="w-full min-h-50 flex flex-col items-center bg-white">
       <h1 className="text-2xl font-bold py-10">{title}</h1>
       {loading ? (
         <Spinner />
       ) : (
-        <div className="flex flex-row justify-evenly flex-wrap w-full px-10 py-5">
+        <div className="grid 2xl:grid-cols-6 xl:grid-cols-4 sm:grid-cols-2 gap-6 w-full px-10 py-5">
           {children ? (
             children
           ) : (
