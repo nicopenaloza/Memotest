@@ -1,16 +1,18 @@
+import { GameCardSession } from "@/interfaces/game";
+
 export default function GameCard({
   card,
   index,
   onClick,
 }: {
-  card: any;
+  card: GameCardSession;
   index: number;
   onClick: (params: any) => void;
 }) {
   return (
     <div
       className={`
-        flip-card 
+        card-container 
         ${(card.active || card.hidden) && "active-card"} 
         mx-5 my-10
         cursor-pointer
@@ -24,11 +26,20 @@ export default function GameCard({
         if (!card.hidden) onClick(index);
       }}
     >
-      <div className="flip-card-inner">
-        <div className="flip-card-front flex flex-col h-full justify-center items-center bg-violet-900">
+      <div className="card-content">
+        <div
+          className="
+        card-front 
+        flex 
+        flex-col 
+        h-full 
+        justify-center 
+        items-center 
+        bg-violet-900"
+        >
           <h1 className="text-9xl font-semibold text-white">{index + 1}</h1>
         </div>
-        <div className="flip-card-back bg-custom-secondary-color text-white">
+        <div className="card-back bg-custom-secondary-color text-white">
           <img
             src={card.image}
             alt="Card Front"

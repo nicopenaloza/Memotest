@@ -33,3 +33,5 @@ export interface PaginatedGamesData {
     paginatorInfo: PaginatorInfo;
   };
 }
+
+export type GameCardSession = Partial<GameCard> & { hidden: boolean; active: boolean };

@@ -17,6 +17,7 @@ export default function NavbarItem({
       className={`
       px-5 
       hover:scale-105 
+      hover:bg-violet-800
       ${activeLinkUnderline} 
       w-44
       h-full
@@ -28,9 +29,11 @@ export default function NavbarItem({
       select-none
       text-white
       font-semibold
+      cursor-pointer
       `}
+      onClick={onClick}
     >
-      <button onClick={onClick}>{title}</button>
+      {title}
     </li>
   );
 }

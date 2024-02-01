@@ -27,3 +27,20 @@ export const PAGINATED_GAME_SESSIONS = gql`
     }
   }
 `;
+
+export const GET_GAME_SESSION = gql`
+  query retrieveGameSession($id: ID!) {
+    gameSession(id: $id) {
+      id
+      username
+      points
+      game {
+        name
+        gameCards {
+          id
+          image
+        }
+      }
+    }
+  }
+`;
