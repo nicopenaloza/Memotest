@@ -1,19 +1,20 @@
 import { GameCardSession } from "@/interfaces/game";
 
 export default function GameCard({
-  card,
+  content,
   index,
   onClick,
 }: {
-  card: GameCardSession;
+  content: GameCardSession;
   index: number;
   onClick: (params: any) => void;
 }) {
   return (
     <div
       className={`
+        select-none
         card-container 
-        ${(card.active || card.hidden) && "active-card"} 
+        ${(content.active || content.hidden) && "active-card"} 
         mx-5 my-10
         cursor-pointer
         transition-all
@@ -23,7 +24,7 @@ export default function GameCard({
         hover:drop-shadow-[0_15px_15px_rgba(50,55,255,0.25)]
   `}
       onClick={() => {
-        if (!card.hidden) onClick(index);
+        if (!content.hidden) onClick(index);
       }}
     >
       <div className="card-content">
@@ -41,7 +42,7 @@ export default function GameCard({
         </div>
         <div className="card-back bg-custom-secondary-color text-white">
           <img
-            src={card.image}
+            src={content.card.image}
             alt="Card Front"
             className="w-full h-full object-cover"
           />

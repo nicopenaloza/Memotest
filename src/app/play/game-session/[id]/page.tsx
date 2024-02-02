@@ -1,74 +1,81 @@
 "use client";
 
-import { carLogo } from "@/assets/images";
 import GameCard from "@/components/game-card";
+import Spinner from "@/components/spinner";
 import YouWinModal from "@/components/you-win-modal";
-import client from "@/graphql/apollo-client";
-import { GET_GAME_SESSION } from "@/graphql/game-session.graphql";
-import {
-  GameCard as IGameCard,
-  GameSession,
-  GameCardSession,
-} from "@/interfaces/game";
+import { GameCardSession, GameSession } from "@/interfaces/game";
 import "@/styles/cards.css";
-import { CardToCardSession, RandomizeCards, turnCard } from "@/utils/utils";
-import { useParams } from "next/navigation";
+import { State } from "@/utils/constants";
+import {
+  endSession,
+  makeAttempt,
+  retrieveSessionInfo,
+  turnCard,
+} from "@/utils/utils";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
-interface IGameSessionProps {
-  id: string;
-  [key: string]: any;
-}
 
 export default function GameSession() {
   const { id } = useParams();
+  const router = useRouter();
 
-  const [username, setUsername] = useState<string>("");
+  const [score, setScore] = useState<number>(0);
   const [attempts, setAttempts] = useState<number>(0);
   const [gameSession, setGameSession] = useState<GameSession>();
   const [currentCards, setCurrentCards] = useState<GameCardSession[]>([]);
-  const [sessionState, setSessionState] = useState<boolean>(true);
+  const [gameState, setGameState] = useState<boolean>(true);
   const [actionsBlocked, setActionBlock] = useState<boolean>(true);
-  const [pairsMatched, setPairsMatched] = useState<number>(0);
-
-  const retrieveSessionInfo = async () => {
-    const { data }: { data: { gameSession: GameSession } } = await client.query(
-      {
-        query: GET_GAME_SESSION,
-        variables: { id: id },
-      }
-    );
-
-    const cards = RandomizeCards(data?.gameSession?.game?.gameCards);
-
-    setCurrentCards(CardToCardSession(cards, true));
-
-    setTimeout(() => {
-      setActionBlock(false);
-      setCurrentCards(CardToCardSession(cards));
-    }, 5000);
-    setGameSession(data?.gameSession);
-  };
 
   useEffect(() => {
-    retrieveSessionInfo();
+    retrieveSessionInfo(id, (session: GameSession) => {
+      if (session) {
+        const cards = session?.cards?.map((card) => ({
+          ...card,
+          previousState: card.hidden,
+          hidden: true,
+        }));
+        setCurrentCards(cards ?? []);
+
+        setTimeout(() => {
+          setActionBlock(false);
+          setCurrentCards(
+            cards?.map((card) => ({
+              ...card,
+              hidden: Boolean(card?.previousState),
+            })) ?? []
+          );
+        }, 5000);
+      }
+      if (session?.state?.id == State.COMPLETED) setGameState(false);
+      setScore(session?.points);
+      setGameSession(session);
+    });
   }, []);
 
   useEffect(() => {
-    if (currentCards.length > 0 && pairsMatched >= currentCards.length / 2) setSessionState(false);
-  }, [pairsMatched]);
+    if (!gameState)
+      endSession(id, (session) => {
+        setScore(session?.points);
+      });
+  }, [gameState]);
 
-  const submitSession = () => {};
+  const validateState = () => {
+    const validPairs = currentCards.filter((card) => card.hidden).length / 2;
+    if (gameSession && validPairs >= gameSession?.numberOfPairs) {
+      setGameState(false);
+    }
+  };
 
-  const flipCard = (index: number) =>
+  const flipCard = (index: number): void =>
     turnCard(
       actionsBlocked,
       currentCards,
       setAttempts,
       setCurrentCards,
-      setPairsMatched,
-      pairsMatched,
       attempts,
+      () => makeAttempt(id),
+      validateState,
+      id,
       index
     );
 
@@ -77,12 +84,12 @@ export default function GameSession() {
       <div className="relative bg-gray-950 w-full min-h-96 flex flex-col justify-center items-center p-4">
         <div
           className={`w-full h-full flex md:flex-row flex-col items-center md:items-start md:justify-start flex-wrap ${
-            !sessionState ? "invisible" : ""
+            !gameState ? "invisible" : ""
           }`}
         >
           {currentCards?.map((card: GameCardSession, index: number) => (
             <GameCard
-              card={card}
+              content={card}
               index={index}
               key={index}
               onClick={flipCard}
@@ -90,8 +97,10 @@ export default function GameSession() {
           ))}
         </div>
 
-        {!sessionState && (
-          <YouWinModal onChange={setUsername} onSubmit={submitSession} />
+        {currentCards?.length <= 0 && <Spinner white />}
+
+        {!gameState && (
+          <YouWinModal score={score} onSubmit={() => router.push("/")} />
         )}
       </div>
       <h1 className="text-2xl font-bold px-8 py-5 font-bold">

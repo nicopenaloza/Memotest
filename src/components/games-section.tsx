@@ -24,8 +24,8 @@ export default function GamesSection() {
       variables: { page: lastPage },
     });
 
-    const games = data?.games?.data;
-    setTotal(data?.games?.paginatorInfo?.total);
+    const games = data?.retrieveMemoTests?.data;
+    setTotal(data?.retrieveMemoTests?.paginatorInfo?.total);
     setCurrentGames(games);
     setLastPage(lastPage + 1);
   };

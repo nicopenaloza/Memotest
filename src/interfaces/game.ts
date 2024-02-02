@@ -7,15 +7,25 @@ export interface Game {
 }
 
 export interface GameSession {
-    id: string;
-    game: Game;
-    game_id: number;
-    points: number;
-    username: string;
-    state: any;
-    deleted: boolean;
-    created_at: string;
-    updated_at: string;
+  id: string;
+  game: Game;
+  game_id: number;
+  cards: GameCardSession[];
+  points: number;
+  username: string;
+  state: GameState;
+  numberOfPairs: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GameCardSession {
+  id: number;
+  card: GameCard;
+  session: GameSession;
+  active: boolean;
+  hidden: boolean;
+  previousState?: boolean;
 }
 
 export interface GameCard {
@@ -34,4 +44,7 @@ export interface PaginatedGamesData {
   };
 }
 
-export type GameCardSession = Partial<GameCard> & { hidden: boolean; active: boolean };
+export interface GameState {
+  id: string;
+  name: string;
+}

@@ -25,9 +25,9 @@ export default function GameSessionsSection() {
       variables: { page: lastPage },
     });
 
-    const games: GameSession[] = data?.gameSessions?.data;
+    const games: GameSession[] = data?.retrieveGameSessions?.data;
     setLastPage(lastPage + 1);
-    setTotal(data?.gameSessions?.paginatorInfo?.total);
+    setTotal(data?.retrieveGameSessions?.paginatorInfo?.total);
     setCurrentSessions((current) => {
       return [
         ...current,

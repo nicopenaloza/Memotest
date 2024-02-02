@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import PrimaryButton from "./primary-button";
 import client from "@/graphql/apollo-client";
 import { CREATE_GAME_SESSION } from "@/graphql/game-session.graphql";
+import { State } from "@/utils/constants";
 
 export function ListItem({
   game,
@@ -24,6 +25,8 @@ export function ListItem({
   const resumeGame = async () => {
     router.push("/play/game-session/" + session?.id);
   };
+
+  console.log("Aca", session?.state);
 
   return (
     <div
@@ -68,10 +71,12 @@ export function ListItem({
             <span className="text-xs">({session?.updated_at})</span>
           )}
         </p>
-        <PrimaryButton
-          label={session ? "Resume Game" : "Start Game"}
-          onClick={() => (game?.id ? startGame() : resumeGame())}
-        />
+        {session?.state?.id != State.COMPLETED ? (
+          <PrimaryButton
+            label={session ? "Resume Game" : "Start Game"}
+            onClick={() => (game?.id ? startGame() : resumeGame())}
+          />
+        ) : <h2 className="font-bold text-violet-900">You got {session?.points} Points!</h2>}
       </div>
     </div>
   );

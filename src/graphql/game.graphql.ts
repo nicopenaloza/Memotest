@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const PAGINATED_GAMES = gql`
   query games($page: Int!) {
-    games(page: $page) {
+    retrieveMemoTests(page: $page) {
       data {
         id
         name
